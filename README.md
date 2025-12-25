@@ -1,95 +1,191 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/TzDKD5h9)
-![School of Solana](https://github.com/Ackee-Blockchain/school-of-solana/blob/master/.banner/banner.png?raw=true)
 
-## 📚Solana Program
-We are about halfway through the course, and you already have some experience with programming on Solana. It is time to create something on your own! You will be building a dApp that will serve as the culmination of everything you have learned so far. Feel free to implement whatever comes to your mind, (as long as it passes the requirements).
+# Slink
 
-**This does not mean that the School of Solana is coming to an end just yet!** There are still several exciting lectures ahead, as well as one security related task.
+**Deployed Frontend URL:** https://www.slinksolana.vercel.app
 
-### Task details
-This task consists of two parts:
-1. **Core of your dApp**
-    - A deployed Solana program.
-2. **Frontend**
-    - A simple frontend to interact with the dApp.
+**Solana Program ID:** 4goWpqS7XGfyvXZAKSf7mdUPShMoFZWvmS4S5H21xY9s
 
-### Requirements
-- An Anchor program deployed on **Devnet** or **Mainnet**.
-- The Anchor program must use a PDA (Program Derived Address).
-- At least one TypeScript **test** for each Anchor program instruction. These tests should cover both **happy** and **unhappy** (intentional error-triggering) scenarios.
-- A simple **frontend** deployed using your preferred provider (for more info, check below).
-- A filled out **PROJECT_DESCRIPTION.md** file.
+## Project Overview
 
-### Ideas
-We highly recommend starting with something simple. Take time to think through your project and work on it in iterations. Do not try to implement everything at once!
+### Description
+Slink is a lightweight, on-chain value-transfer protocol that lets users lock SOL into a PDA vault and generate a shareable claim link. Anyone with the correct claim key can unlock the funds and withdraw them.
 
-Below is a list of few ideas to get you started:
-- **Social app**
-    - Instagram
-    - Giphy
-    - Friendtech
-    - Spotify
-- **Blog**
-- **Voting** ([D21 - Janeček method](https://www.ih21.org/en/guidelines))
-- **DeFi**
-    - Raffles
-    - Escrow
-    - Tipping
-    - Lending ([Save Documentation](https://docs.save.finance/))
-    - Liquid Staking ([Marinade Documentation](https://docs.marinade.finance/))
-    - Data Query with Pyth ([Pyth Documentation](https://docs.pyth.network/price-feeds))
-    - AMM ([Raydium Documentation](https://raydium.gitbook.io/raydium/))
-- **Gaming**
-    - Browser Game ([Gaming on Solana](https://solanacookbook.com/gaming/nfts-in-games.html#nfts-in-games))
+Think of Slink as a Web3 cash-drop system:
 
-### Deadline
-The deadline for this task is **Wednesday, November 19th, at 23:59 UTC**.
->[!CAUTION]
->Note that we will not accept submissions after the deadline.
+The creator locks SOL + a description + a secret claim key.
 
-### Submission
-There are two folders, one for the Anchor project, and one for the frontend. Push your changes to the **main** branch of **this** repository.
+A PDA vault is created for that Slink.
 
->[!IMPORTANT]
->It is essential that you fill out the `PROJECT_DESCRIPTION.md` template completely and accurately. This document will be used by AI for the initial evaluation, so provide detailed information about your project, including working links, clear descriptions, and technical implementation details.
+The creator shares the Slink link and claim key with the intended recipient.
 
->[!NOTE]
->Your submission repository is public. Feel free to share the link to showcase your work!
+The recipient visits the site, enters the claim key, and instantly withdraws the locked SOL to their wallet.
 
-### Evaluation
-The evaluation process is based on the **requirements**. If you meet the requirements, you pass the task!
+This creates a simple, permissionless, gas-efficient way to transfer SOL without needing to know the recipient’s wallet upfront.
+### Key Features
+- ...
+  
+### How to Use the dApp
+Create Slinks: Lock any amount of SOL into a PDA vault with a short description.
 
->[!NOTE]
->The first round of evaluations will be conducted by AI to verify requirements before manual review. AI can make mistakes. If you believe you fulfilled all requirements but weren't graded correctly, please create a support ticket and we will resolve the issue.
+Claim Slinks: Anyone with the claim key can withdraw the funds.
 
->[!CAUTION]
->We expect original work that demonstrates your understanding and creativity. While you may draw inspiration from examples covered in lessons and tasks, **direct copying is not acceptable**. If you choose to build upon an example from the School of Solana materials, you must significantly expand it with additional features, instructions, and functionality to showcase your learning progress. 
+Secure Claim Keys: Claim logic validates keys and prevents double-claiming.
 
-### Example Workflow
-Let's say you are going to implement the Twitter dApp as the Solana Program. Here's how the steps could look:
+Predictable PDA Vaults: Deterministic vault addresses using "slink_vault" + slink_id.
 
-**1.** Implement Twitter dApp using the Anchor framework.
+Anchor Events: Emits events on creation for analytics and indexing.
 
-**2.** Test the Twitter dApp using the Anchor framework.
+Modern React Frontend:
+• Wallet adapter
+• Realtime status messages
+• Automatic PDA derivation
+• Clean UI for create + claim flows
 
-**3.** Deploy the Twitter dApp on the Solana Devnet.
+## Program Architecture
+Overview
 
-**4.** Using the create solana dapp template, implement frontend for the Twitter dApp.
+The Slink program revolves around a single PDA vault for each created Slink.
+Each vault stores:
 
-**5.** Publish Frontend using [Vercel](https://vercel.com). Ensure the deployment is publicly accessible.
+Creator
 
-**6.** Fill out the PROJECT_DESCRIPTION.md template.
+Amount locked
 
-**7.** Submit the Twitter dApp using GitHub Classroom.
+Description
 
-### Useful Links
-- [Vercel](https://vercel.com)
-- [Create Solana Dapp](https://github.com/solana-foundation/create-solana-dapp)
-- [Account Macro Constraints](https://docs.rs/anchor-lang/0.31.1/anchor_lang/derive.Accounts.html)
-- [Solana Developers Courses](https://solana.com/developers/courses)
+Slink ID
 
------
+Claim key hash
 
-### Need help?
->[!TIP]
->If you have any questions, feel free to reach out to us on [Discord](https://discord.gg/z3JVuZyFnp).
+Claim state
+
+The program executes two key instructions:
+
+create_slink: initializes the vault + moves SOL in
+
+claim_slink: validates the claim key + transfers SOL out
+
+### PDA Usage
+
+Overview
+
+The Slink program revolves around a single PDA vault for each created Slink.
+Each vault stores:
+
+Creator
+
+Amount locked
+
+Description
+
+Slink ID
+
+Claim key hash
+
+Claim state
+
+The program executes two key instructions:
+
+create_slink: initializes the vault + moves SOL in
+
+claim_slink: validates the claim key + transfers SOL out
+
+Program Instructions
+1. create_slink(...)
+
+Creates a PDA vault and transfers SOL from the creator into it.
+
+Core logic:
+
+Reject descriptions > 50 chars.
+
+Check user has enough SOL.
+
+Initialize vault.
+
+Perform CPI to system_program::transfer.
+
+Store metadata (creator, amount, claim key hash).
+
+Emit SlinkCreated.
+
+2. claim_slink(...)
+
+Allows a user to claim funds if they provide the correct claim key.
+
+Core logic:
+
+Validate claim key.
+
+Ensure the vault is not already claimed.
+
+Transfer lamports to the claimant.
+
+Mark is_claimed = true.
+
+
+### Account Structure
+
+
+```rust
+// Example account structure (replace with your actual structs)
+#[account]
+pub struct SlinkVault {
+    pub creator: Pubkey, 
+    pub slink_id: String, 
+    pub description: String, 
+    pub amount: u64,
+    pub claim_key_hash: String,
+    pub is_claimed: bool,
+}
+```
+
+## Testing
+
+### Test CoverageHappy Paths
+
+Create a Slink with valid inputs.
+
+Claim a Slink with correct claim key.
+
+Validate funds transfer into and out of the vault.
+
+Confirm events emitted.
+
+Unhappy Paths
+
+Oversized descriptions (>50 chars).
+
+Insufficient balance during creation.
+
+Incorrect claim key.
+
+Attempting to claim an already claimed Slink.
+
+Invalid PDA derivation or missing account.
+
+### Running Tests
+```bash
+# Commands to run your tests
+anchor test
+```
+
+### Additional Notes for Evaluators
+
+The system uses strict PDA validation to eliminate account spoofing.
+
+All SOL transfers are done via CPI to System Program for correctness.
+
+Frontend computes PDA before creation to ensure deterministic addresses.
+
+Fully compatible with Phantom, Solflare, and all Wallet Adapter wallets.
+
+Architecture is clean, minimal, and easily extensible:
+
+Expirations
+
+Multi-claim
+
+Time-locked vaults
+
+Encrypted claim keys
